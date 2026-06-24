@@ -103,7 +103,14 @@
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
-        .checkout-btn { background: var(--secondary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .pix-container {
+            background: #E0F7FA; border: 1px dashed var(--secondary); padding: 12px;
+            border-radius: 8px; margin: 15px 0; text-align: center; color: #006064;
+        }
+        .pix-box { display: flex; gap: 8px; margin-top: 5px; }
+        .pix-input { flex: 1; padding: 8px; border: 1px solid var(--secondary); border-radius: 4px; font-weight: bold; text-align: center; background: white; color: #006064; font-size: 0.95rem; }
+        .copy-btn { background: var(--secondary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .checkout-btn { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .delivery-alert { background: rgba(106, 27, 154, 0.1); border-left: 4px solid var(--primary); padding: 8px 12px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; }
         .addons-list { text-align: left; background: var(--bg); padding: 8px; border-radius: 6px; margin-bottom: 8px; font-size: 0.8rem; }
         .addons-list label { display: block; margin: 4px 0; cursor: pointer; }
@@ -215,7 +222,17 @@
                 Total: R$ 0,00
             </div>
 
-            <h3 style="margin: 20px 0 10px; border-top: 1px solid var(--border); padding-top: 15px;">📋 Dados de Entrega</h3>
+            <!-- ÁREA DO PIX COPIA E COLA -->
+            <div class="pix-container">
+                <strong>📱 Pagamento Exclusivo via Pix</strong>
+                <p style="font-size: 0.8rem; margin-top: 2px;">Copie a chave celular abaixo para pagar:</p>
+                <div class="pix-box">
+                    <input type="text" id="pix-key" class="pix-input" value="12991618035" readonly>
+                    <button type="button" class="copy-btn" onclick="copyPix()">Copiar</button>
+                </div>
+            </div>
+
+            <h3 style="margin: 10px 0 10px; border-top: 1px solid var(--border); padding-top: 15px;">📋 Dados de Entrega</h3>
             <form id="checkout-form" onsubmit="sendOrder(event)">
                 <div class="form-group">
                     <label>Seu Nome *</label>
@@ -242,14 +259,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Forma de Pagamento *</label>
-                    <select id="payment-method" required>
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão de Crédito/Débito">Cartão de Crédito/Débito</option>
-                        <option value="Dinheiro">Dinheiro</option>
+                    <label>Forma de Pagamento</label>
+                    <select id="payment-method" disabled style="background-color: #f0f0f0;">
+                        <option value="Pix">Pix (Chave: 12991618035)</option>
                     </select>
                 </div>
-                <button type="submit" class="checkout-btn">🚀 Enviar Pedido via WhatsApp</button>
+                <button type="submit" class="checkout-btn">🚀 Confirmar e Enviar no WhatsApp</button>
             </form>
         </div>
     </div>
@@ -392,6 +407,25 @@
             }
         }
 
+        function copyPix() {
+            const copyText = document.getElementById("pix-key");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Chave Pix copiada com sucesso!");
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            if(current === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('grazia_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('grazia_theme', 'dark');
+            }
+        }
+
         function addToCart(name, unitPrice, category) {
             const itemKey = `${name}-${category}`;
             const existing = cart.find(i => i.key === itemKey);
@@ -519,12 +553,11 @@
             const delivType = document.getElementById('delivery-type').value;
             const addr = document.getElementById('client-address').value;
             const ref = document.getElementById('client-ref').value;
-            const payment = document.getElementById('payment-method').value;
 
             const { totalPrice, deliveryFee } = calculateTotals();
             let message = `🍇 *NOVO PEDIDO - GRAZIA SORVETES* 🍇\n\n👤 *Cliente:* ${name}\n🛵 *Tipo:* ${delivType === 'entrega' ? 'Entrega' : 'Retirada'}\n`;
             if(delivType === 'entrega') message += `📍 *End:* ${addr}\n🚚 *Frete:* R$ 6,00\n`;
-            message += `💳 *Pagamento:* ${payment}\n\n🛒 *ÍTENS:*\n`;
+            message += `💳 *Pagamento:* Pix (Realizado)\n\n🛒 *ÍTENS:*\n`;
             cart.forEach(item => { message += `• ${item.qty}x ${item.name} -> R$ ${(item.unitPrice * item.qty).toFixed(2)}\n`; });
             message += `\n💰 *TOTAL:* R$ ${(totalPrice + deliveryFee).toFixed(2)}`;
 
