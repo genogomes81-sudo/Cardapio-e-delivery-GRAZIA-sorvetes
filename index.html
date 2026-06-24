@@ -4,133 +4,795 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grazia Sorvetes - O Sorvete do Gorila</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6A1B9A; 
-            --primary-light: #8E24AA; 
-            --secondary: #0288D1; 
-            --bg: #F3E5F5; 
+            --primary: #7B2D8E;
+            --primary-light: #A855F7;
+            --primary-glow: rgba(168, 85, 247, 0.25);
+            --secondary: #0EA5E9;
+            --accent: #F59E0B;
+            --bg: #FAF5FF;
+            --bg-warm: #FDF6EC;
             --surface: #FFFFFF;
-            --text: #2A085C; 
-            --border: #B39DDB; 
-            --shadow: rgba(106, 27, 154, 0.1);
+            --surface-hover: #F9F5FF;
+            --text: #1E1033;
+            --text-secondary: #6B5B7B;
+            --text-muted: #9B8FAE;
+            --border: #E9DFF5;
+            --border-light: #F3EEFF;
+            --shadow-sm: 0 1px 3px rgba(123, 45, 142, 0.06);
+            --shadow-md: 0 4px 16px rgba(123, 45, 142, 0.08);
+            --shadow-lg: 0 8px 32px rgba(123, 45, 142, 0.12);
+            --shadow-glow: 0 0 20px rgba(168, 85, 247, 0.15);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --font-display: 'Fredoka', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
         }
+
         [data-theme="dark"] {
-            --primary: #B388FF;
-            --primary-light: #7C4DFF;
-            --secondary: #29B6F6;
-            --bg: #120024;
-            --surface: #22123B;
-            --text: #EDE7F6;
-            --border: #512DA8;
-            --shadow: rgba(0, 0, 0, 0.5);
+            --primary: #C084FC;
+            --primary-light: #A855F7;
+            --primary-glow: rgba(168, 85, 247, 0.3);
+            --secondary: #38BDF8;
+            --accent: #FBBF24;
+            --bg: #0C0515;
+            --bg-warm: #110A1E;
+            --surface: #1A1028;
+            --surface-hover: #231740;
+            --text: #F3EEFF;
+            --text-secondary: #B8A9CC;
+            --text-muted: #7B6A94;
+            --border: #2D1F4E;
+            --border-light: #241644;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 24px rgba(168, 85, 247, 0.25);
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--bg);
+            font-family: var(--font-body);
+            background: var(--bg);
             color: var(--text);
-            padding-bottom: 60px;
+            padding-bottom: 80px;
+            min-height: 100vh;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 10%, var(--primary-glow) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── HEADER ── */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px var(--shadow);
             position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, #5B21B6 40%, var(--secondary) 100%);
+            padding: 40px 24px 36px;
+            text-align: center;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            z-index: 1;
         }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 4px;
+        }
+
         .theme-toggle {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 24px;
             cursor: pointer;
-            font-weight: bold;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all 0.25s ease;
+            z-index: 2;
         }
-        header h1 { font-size: 2.2rem; margin-bottom: 5px; }
-        header p { font-size: 1rem; opacity: 0.9; margin: 3px 0; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .controls { margin: 20px 0; display: flex; gap: 10px; }
+        .theme-toggle:hover { background: rgba(255, 255, 255, 0.25); transform: scale(1.05); }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(6px);
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 14px;
+            letter-spacing: 0.03em;
+        }
+
+        header h1 {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+            position: relative;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .header-subtitle {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 20px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+        }
+        .header-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ── CONTAINER ── */
+        .container {
+            position: relative;
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            z-index: 1;
+        }
+
+        /* ── SEARCH ── */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-wrapper::before {
+            content: '⌕';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
         .search-bar {
-            flex: 1; padding: 12px; border: 2px solid var(--border);
-            border-radius: 10px; background: var(--surface); color: var(--text); font-size: 1rem;
+            width: 100%;
+            padding: 14px 18px 14px 46px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            box-shadow: var(--shadow-sm);
         }
-        .category-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px; }
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-glow);
+        }
+        .search-bar::placeholder { color: var(--text-muted); }
+
+        /* ── CATEGORY FILTERS ── */
+        .category-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 12px;
+            margin-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .category-filters::-webkit-scrollbar { display: none; }
+
         .category-btn {
-            background: var(--surface); border: 2px solid var(--border); color: var(--text);
-            padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: 600;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            color: var(--text-secondary);
+            padding: 9px 18px;
+            border-radius: 28px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.84rem;
+            transition: all 0.25s ease;
+            box-shadow: var(--shadow-sm);
         }
-        .category-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .section-title { font-size: 1.5rem; margin: 30px 0 15px; padding-left: 10px; border-left: 5px solid var(--primary); }
+        .category-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+            background: var(--surface-hover);
+        }
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 3px 12px var(--primary-glow);
+        }
+
+        /* ── SECTIONS ── */
+        .product-section {
+            margin-bottom: 36px;
+            animation: sectionIn 0.5s ease both;
+        }
+        .product-section:nth-child(2) { animation-delay: 0.05s; }
+        .product-section:nth-child(3) { animation-delay: 0.1s; }
+
+        @keyframes sectionIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px var(--primary-glow);
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
         .pricing-info {
-            background: var(--surface); padding: 12px; border-radius: 10px; margin-bottom: 15px;
-            border: 1px dashed var(--primary); font-size: 0.95rem; line-height: 1.4;
+            background: linear-gradient(135deg, var(--surface-hover), var(--surface));
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            border: 1.5px dashed var(--border);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
         }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+        .pricing-info strong { color: var(--primary); }
+
+        /* ── PRODUCT GRID ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+            gap: 14px;
+        }
+
         .product-card {
-            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px; text-align: center; box-shadow: 0 2px 6px var(--shadow);
-            display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--surface);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px 14px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: cardIn 0.4s ease forwards;
         }
-        .product-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 8px; min-height: 36px; display: flex; align-items: center; justify-content: center; }
-        .product-price { color: var(--primary); font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; }
-        .size-select { width: 100%; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 8px; font-size: 0.85rem; }
-        .add-btn { background: var(--secondary); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-light);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .product-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 2px;
+        }
+
+        .product-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.3;
+            min-height: unset;
+        }
+
+        .product-price {
+            font-family: var(--font-display);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .size-select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .size-select:focus { outline: none; border-color: var(--primary-light); }
+
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.82rem;
+            width: 100%;
+            transition: all 0.25s ease;
+            letter-spacing: 0.02em;
+        }
+        .add-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+        .add-btn:active { transform: scale(0.97); }
+
+        /* ── ADDONS ── */
+        .addons-list {
+            text-align: left;
+            width: 100%;
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            border: 1px solid var(--border-light);
+        }
+        .addons-list strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .addons-list label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 3px 0;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .addons-list input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ── CART BAR ── */
         .cart-preview-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); color: white;
-            padding: 15px; text-align: center; font-weight: bold; cursor: pointer; box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
-            z-index: 1000; display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto; border-top-left-radius: 15px; border-top-right-radius: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 1060px;
+            width: calc(100% - 32px);
+            background: linear-gradient(135deg, var(--primary), #5B21B6);
+            color: white;
+            padding: 16px 24px;
+            cursor: pointer;
+            box-shadow: 0 -4px 24px rgba(91, 33, 182, 0.3);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            transition: all 0.3s ease;
         }
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
-        .modal-content { background: var(--surface); color: var(--text); padding: 20px; border-radius: 15px; max-width: 500px; width: 100%; max-height: 85vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
-        .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .cart-item-actions { display: flex; align-items: center; gap: 8px; }
-        .qty-btn { background: var(--border); border: none; color: var(--text); width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        .cart-preview-bar:hover {
+            box-shadow: 0 -6px 30px rgba(91, 33, 182, 0.4);
+            transform: translateX(-50%) translateY(-2px);
+        }
+        .cart-preview-bar span:first-child {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .cart-preview-bar span:last-child {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        /* ── MODAL ── */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(12, 5, 21, 0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 2000;
+            padding: 0;
+        }
+        .modal-content {
+            background: var(--surface);
+            color: var(--text);
+            padding: 28px 24px;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.35s ease;
+        }
+        @keyframes modalSlideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .close-btn {
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .close-btn:hover { background: var(--border); color: var(--text); }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-light);
+            gap: 12px;
+        }
+        .cart-item div:first-child span {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .cart-item strong {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .cart-item-actions span {
+            font-family: var(--font-display);
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+        }
+        .qty-btn {
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            color: var(--text);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .qty-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        #cart-total-price {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            margin-top: 12px;
+        }
+        #cart-delivery-fee {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── PIX ── */
         .pix-container {
-            background: #E0F7FA; border: 1px dashed var(--secondary); padding: 12px;
-            border-radius: 8px; margin: 15px 0; text-align: center; color: #006064;
+            background: linear-gradient(135deg, #ECFDF5, #F0FDF4);
+            border: 1.5px dashed #34D399;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin: 20px 0;
+            text-align: center;
+            color: #065F46;
         }
-        .pix-box { display: flex; gap: 8px; margin-top: 5px; }
-        .pix-input { flex: 1; padding: 8px; border: 1px solid var(--secondary); border-radius: 4px; font-weight: bold; text-align: center; background: white; color: #006064; font-size: 0.95rem; }
-        .copy-btn { background: var(--secondary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
-        .checkout-btn { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .delivery-alert { background: rgba(106, 27, 154, 0.1); border-left: 4px solid var(--primary); padding: 8px 12px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; }
-        .pix-alert { background: #FFF3E0; border-left: 4px solid #FF9800; color: #E65100; padding: 10px 12px; font-size: 0.9rem; margin-top: 15px; border-radius: 4px; font-weight: 600; text-align: center; }
-        .addons-list { text-align: left; background: var(--bg); padding: 8px; border-radius: 6px; margin-bottom: 8px; font-size: 0.8rem; }
-        .addons-list label { display: block; margin: 4px 0; cursor: pointer; }
-        footer { text-align: center; padding: 30px 20px; margin-top: 40px; border-top: 1px solid var(--border); font-size: 0.9rem; opacity: 0.8; line-height: 1.6; }
-        @media (max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        [data-theme="dark"] .pix-container {
+            background: linear-gradient(135deg, #064E3B, #065F46);
+            border-color: #34D399;
+            color: #D1FAE5;
+        }
+        .pix-container strong {
+            font-family: var(--font-display);
+            font-size: 1rem;
+        }
+        .pix-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .pix-input {
+            flex: 1;
+            padding: 10px;
+            border: 1.5px solid #34D399;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-display);
+            font-weight: 700;
+            text-align: center;
+            font-size: 1rem;
+            background: white;
+            color: #065F46;
+        }
+        [data-theme="dark"] .pix-input {
+            background: #052E16;
+            color: #D1FAE5;
+            border-color: #34D399;
+        }
+        .copy-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: #047857; }
+
+        /* ── FORM ── */
+        .section-divider {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0 14px;
+            padding-top: 18px;
+            border-top: 2px solid var(--border);
+        }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+
+        .delivery-alert {
+            background: var(--surface-hover);
+            border-left: 4px solid var(--primary-light);
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .delivery-alert strong { color: var(--primary); }
+
+        .pix-alert {
+            background: linear-gradient(135deg, #FFF7ED, #FFFBEB);
+            border: 1.5px solid #FDBA74;
+            color: #9A3412;
+            padding: 14px 16px;
+            font-size: 0.88rem;
+            margin-top: 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+        [data-theme="dark"] .pix-alert {
+            background: linear-gradient(135deg, #451A03, #422006);
+            border-color: #FB923C;
+            color: #FED7AA;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, var(--primary), #5B21B6);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 16px var(--primary-glow);
+        }
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--primary-glow);
+        }
+        .checkout-btn:active { transform: translateY(0); }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            text-align: center;
+            padding: 40px 24px 30px;
+            margin-top: 48px;
+            border-top: 2px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            z-index: 1;
+        }
+        footer strong {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+        footer small { opacity: 0.6; }
+
+        /* ── RESPONSIVE ── */
+        @media (min-width: 480px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+            }
+            .modal-content {
+                border-radius: var(--radius-xl);
+                max-height: 85vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            header h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.1rem; }
+            .product-card { padding: 14px 10px; }
+            .container { padding: 16px 14px; }
+            .cart-preview-bar { width: calc(100% - 16px); }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓 Modo</button>
-        <h1>🍇 GRAZIA SORVETES</h1>
-        <p>O Sorvete do Gorila</p>
-        <p>📍 Rua General Júlio Salgado, 399 - Alto do Tabaú (Na Praça)</p>
-        <p>📞 (12) 99161-8035</p>
+        <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+        <div class="header-badge">🦍 O Sorvete do Gorila</div>
+        <h1>GRAZIA SORVETES</h1>
+        <p class="header-subtitle">Sorvetes artesanais com muito amor</p>
+        <div class="header-info">
+            <span>📍 Rua General Júlio Salgado, 399 - Alto do Tabaú</span>
+            <span>📞 (12) 99161-8035</span>
+        </div>
     </header>
 
     <div class="container">
-        <div class="controls">
+        <div class="search-wrapper">
             <input type="text" id="search" class="search-bar" placeholder="Buscar sabor ou produto..." oninput="filterProducts()">
         </div>
 
@@ -147,56 +809,77 @@
 
         <!-- PICOLÉS -->
         <div class="product-section" data-cat="picole">
-            <h2 class="section-title">🍦 PICOLÉS</h2>
+            <div class="section-header">
+                <div class="section-icon">🍦</div>
+                <h2 class="section-title">PICOLÉS</h2>
+            </div>
             <div class="pricing-info">
-                <strong>Preço por atacado:</strong><br>
-                • Unidade: R$ 2,20<br>
-                • 10 ou mais: R$ 1,80 cada<br>
-                • 100 ou mais: R$ 1,60 cada
+                <strong>💰 Preço por atacado:</strong><br>
+                • Unidade: R$ 2,20 &nbsp;·&nbsp; 10+: R$ 1,80 cada &nbsp;·&nbsp; 100+: R$ 1,60 cada
             </div>
             <div class="grid" id="grid-picoles"></div>
         </div>
 
         <!-- PALETAS -->
         <div class="product-section" data-cat="paleta">
-            <h2 class="section-title">🦍 PALETAS DO GORILA</h2>
-            <div class="pricing-info">Valor unitário: R$ 6,30 cada</div>
+            <div class="section-header">
+                <div class="section-icon">🦍</div>
+                <h2 class="section-title">PALETAS DO GORILA</h2>
+            </div>
+            <div class="pricing-info">Valor unitário: <strong>R$ 6,30</strong> cada</div>
             <div class="grid" id="grid-paletas"></div>
         </div>
 
         <!-- POTES 300 ML -->
         <div class="product-section" data-cat="pote300">
-            <h2 class="section-title">🍧 SORVETE DE POTE 300 ML</h2>
+            <div class="section-header">
+                <div class="section-icon">🍧</div>
+                <h2 class="section-title">SORVETE DE POTE 300 ML</h2>
+            </div>
             <div class="grid" id="grid-potes300"></div>
         </div>
 
         <!-- POTES GRANDES -->
         <div class="product-section" data-cat="pote">
-            <h2 class="section-title">🍨 SORVETES EM POTE (1L e 1.8L)</h2>
+            <div class="section-header">
+                <div class="section-icon">🍨</div>
+                <h2 class="section-title">SORVETES EM POTE (1L e 1.8L)</h2>
+            </div>
             <div class="grid" id="grid-potes"></div>
         </div>
 
         <!-- COPOS DE AÇAÍ -->
         <div class="product-section" data-cat="copo-acai">
-            <h2 class="section-title">🥤 COPOS DE AÇAÍ (Escolha até 2 adicionais)</h2>
+            <div class="section-header">
+                <div class="section-icon">🥤</div>
+                <h2 class="section-title">COPOS DE AÇAÍ</h2>
+            </div>
+            <div class="pricing-info">Escolha até <strong>2 adicionais grátis</strong> por copo!</div>
             <div class="grid" id="grid-copos-acai"></div>
         </div>
 
         <!-- AÇAÍ EM LITRO -->
         <div class="product-section" data-cat="acai">
-            <h2 class="section-title">📦 AÇAÍ EM LITRO</h2>
+            <div class="section-header">
+                <div class="section-icon">📦</div>
+                <h2 class="section-title">AÇAÍ EM LITRO</h2>
+            </div>
             <div class="grid" id="grid-acai"></div>
         </div>
 
         <!-- OUTROS -->
         <div class="product-section" data-cat="outros">
-            <h2 class="section-title">🍫 ESPECIAIS</h2>
+            <div class="section-header">
+                <div class="section-icon">🍫</div>
+                <h2 class="section-title">ESPECIAIS</h2>
+            </div>
             <div class="grid" id="grid-outros"></div>
         </div>
     </div>
 
     <footer>
-        <strong>🍇 GRAZIA SORVETES - O SORVETE DO GORILA</strong><br>
+        <strong>🍇 GRAZIA SORVETES</strong>
+        O Sorvete do Gorila<br>
         📍 Rua General Júlio Salgado, 399 - Alto do Tabaú (Na Praça)<br>
         📞 WhatsApp: (12) 99161-8035<br>
         <small>© 2026 - Todos os direitos reservados</small>
@@ -204,7 +887,7 @@
 
     <div class="cart-preview-bar" id="cart-bar" onclick="openCart()">
         <span>🛒 Ver Carrinho</span>
-        <span id="cart-summary">0 itens - R$ 0,00</span>
+        <span id="cart-summary">0 itens — R$ 0,00</span>
     </div>
 
     <!-- MODAL CARRINHO -->
@@ -215,25 +898,24 @@
                 <button class="close-btn" onclick="closeCart()">&times;</button>
             </div>
             <div id="cart-items-container"></div>
-            
+
             <div style="margin-top: 15px; text-align: right; font-size: 0.95rem; display: none;" id="cart-delivery-fee">
                 Taxa de Entrega (Até 2 km): R$ 6,00
             </div>
-            <div style="margin-top: 10px; font-weight: bold; text-align: right; font-size: 1.1rem;" id="cart-total-price">
+            <div style="margin-top: 10px; font-weight: bold; text-align: right; font-size: 1.2rem;" id="cart-total-price">
                 Total: R$ 0,00
             </div>
 
-            <!-- ÁREA DO PIX COPIA E COLA -->
             <div class="pix-container">
                 <strong>📱 Pagamento Exclusivo via Pix</strong>
-                <p style="font-size: 0.8rem; margin-top: 2px;">Copie a chave celular abaixo para pagar:</p>
+                <p style="font-size: 0.82rem; margin-top: 4px; opacity: 0.8;">Copie a chave celular abaixo para pagar:</p>
                 <div class="pix-box">
                     <input type="text" id="pix-key" class="pix-input" value="12991618035" readonly>
                     <button type="button" class="copy-btn" onclick="copyPix()">Copiar</button>
                 </div>
             </div>
 
-            <h3 style="margin: 10px 0 10px; border-top: 1px solid var(--border); padding-top: 15px;">📋 Dados de Entrega</h3>
+            <h3 class="section-divider">📋 Dados de Entrega</h3>
             <form id="checkout-form" onsubmit="sendOrder(event)">
                 <div class="form-group">
                     <label>Seu Nome *</label>
@@ -242,8 +924,8 @@
                 <div class="form-group">
                     <label>Forma de Entrega *</label>
                     <select id="delivery-type" onchange="handleDeliveryChange()" required>
-                        <option value="entrega">Entrega em Domicílio (Raio de 2km)</option>
-                        <option value="retirada">Retirar na Praça (Alto do Tabaú)</option>
+                        <option value="entrega">🛵 Entrega em Domicílio (Raio de 2km)</option>
+                        <option value="retirada">🏃 Retirar na Praça (Alto do Tabaú)</option>
                     </select>
                 </div>
                 <div id="address-fields">
@@ -261,13 +943,13 @@
                 </div>
                 <div class="form-group">
                     <label>Forma de Pagamento</label>
-                    <select id="payment-method" disabled style="background-color: #f0f0f0;">
+                    <select id="payment-method" disabled style="opacity:0.7;">
                         <option value="Pix">Pix (Chave: 12991618035)</option>
                     </select>
                 </div>
-                
+
                 <div class="pix-alert">
-                    ⚠️ Por favor, enviar o comprovante do Pix para confirmar sua compra, obrigado.
+                    ⚠️ Por favor, envie o comprovante do Pix para confirmar sua compra. Obrigado!
                 </div>
 
                 <button type="submit" class="checkout-btn">🚀 Confirmar e Enviar no WhatsApp</button>
@@ -279,7 +961,6 @@
         const picoles = ["Coco", "Chocolate", "Morango", "Leite Condensado", "Ninho", "Coco Queimado", "Mousse de Maracujá", "Doce de Leite", "Milho Verde", "Blue Ice", "Bombom", "Flocos", "Amendoim", "Limonada Suíça", "Abacaxi", "Limão", "Tangerina", "Uva", "Maracujá", "Groselha", "Maçã Verde", "Pinta Língua", "Manga"];
         const paletas = ["Açaí / Leite Condensado", "Banana / Avelã", "Brigadeiro", "Café Frappé", "Chiclete", "Chocolate / Morango", "Churros / Canela", "Cocada Branca", "Cocada / Leite Condensado", "Coco / Beijinho", "Cural", "Iogurte / Frutas Vermelhas", "Maracujá / Leite Condensado", "Menta / Chocolate", "Morango / Leite Condensado", "Ninho / Avelã", "Ovomaltine", "Paçoca", "Pé de Moleque", "Prestígio / Beijinho", "Romeu e Julieta", "Pistache"];
         const potes = ["Abacaxi", "Abacaxi ao Vinho", "Banana Caramelizada", "Banoffe", "Bombom", "Bombom com Café", "Brigadeiro", "Capuccino", "Chandelle", "Chiclete", "Chocolate", "Cocada", "Coco", "Coco Trufado", "Creme", "Doce de Leite", "Flocos", "Iogurte", "Kinder Ovo", "Leite Condensado", "Leite Condensado Trufado", "Maracujá", "Maracujá Trufado", "Milho Verde", "Mega Trufa", "Morango", "Mousse de Limão", "Napolitano", "Negresco", "Ninho Trufado", "Ovomaltine", "Passas ao Rum", "Pavê", "Pistache", "Sensação", "Sonho de Valsa", "Triplo Chocolate"];
-        
         const potes300 = ["Coco", "Chocolate", "Napolitano", "Flocos", "Bombom", "Morango", "Milho Verde"];
         const adicionaisAcai = ["Leite em Pó", "Leite Condensado", "Paçoca", "Choco Power", "Confete", "Granulado"];
 
@@ -291,55 +972,35 @@
         }
 
         function init() {
-            if(localStorage.getItem('grazia_theme') === 'dark') {
+            if (localStorage.getItem('grazia_theme') === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
 
+            let cardIndex = 0;
+            const stagger = (idx) => `animation-delay: ${idx * 0.04}s;`;
+
             // Render Picolés
             const gPicoles = document.getElementById('grid-picoles');
-            picoles.forEach(p => {
-                gPicoles.innerHTML += `
-                    <div class="product-card" data-name="${p.toLowerCase()}">
-                        <div class="product-name">🍦 ${p}</div>
-                        <div class="product-price">R$ 2,20</div>
-                        <button class="add-btn" onclick="addToCart('${p}', 2.20, 'Picolé')">Adicionar</button>
-                    </div>`;
+            picoles.forEach((p, i) => {
+                gPicoles.innerHTML += `<div class="product-card" data-name="${p.toLowerCase()}" style="${stagger(cardIndex++)}"><div class="product-emoji">🍦</div><div class="product-name">${p}</div><div class="product-price">R$ 2,20</div><button class="add-btn" onclick="addToCart('${p}', 2.20, 'Picolé')">Adicionar</button></div>`;
             });
 
             // Render Paletas
             const gPaletas = document.getElementById('grid-paletas');
             paletas.forEach(p => {
-                gPaletas.innerHTML += `
-                    <div class="product-card" data-name="${p.toLowerCase()}">
-                        <div class="product-name">🦍 ${p}</div>
-                        <div class="product-price">R$ 6,30</div>
-                        <button class="add-btn" onclick="addToCart('${p}', 6.30, 'Paleta')">Adicionar</button>
-                    </div>`;
+                gPaletas.innerHTML += `<div class="product-card" data-name="${p.toLowerCase()}" style="${stagger(cardIndex++)}"><div class="product-emoji">🦍</div><div class="product-name">${p}</div><div class="product-price">R$ 6,30</div><button class="add-btn" onclick="addToCart('${p}', 6.30, 'Paleta')">Adicionar</button></div>`;
             });
 
             // Render Potes 300 ML
             const gPotes300 = document.getElementById('grid-potes300');
             potes300.forEach(p => {
-                gPotes300.innerHTML += `
-                    <div class="product-card" data-name="${p.toLowerCase()}">
-                        <div class="product-name">🍧 ${p} (300ml)</div>
-                        <div class="product-price">R$ 10,00</div>
-                        <button class="add-btn" onclick="addToCart('${p} (300ml)', 10.00, 'Pote 300ml')">Adicionar</button>
-                    </div>`;
+                gPotes300.innerHTML += `<div class="product-card" data-name="${p.toLowerCase()}" style="${stagger(cardIndex++)}"><div class="product-emoji">🍧</div><div class="product-name">${p} (300ml)</div><div class="product-price">R$ 10,00</div><button class="add-btn" onclick="addToCart('${p} (300ml)', 10.00, 'Pote 300ml')">Adicionar</button></div>`;
             });
 
             // Render Potes Grandes
             const gPotes = document.getElementById('grid-potes');
             potes.forEach(p => {
-                gPotes.innerHTML += `
-                    <div class="product-card" data-name="${p.toLowerCase()}">
-                        <div class="product-name">🍨 ${p}</div>
-                        <select class="size-select" id="size-pote-${p.replace(/\s+/g, '')}">
-                            <option value="1L|19.00">1 Litro - R$ 19,00</option>
-                            <option value="1.8L|29.00">1.800 ml - R$ 29,00</option>
-                        </select>
-                        <button class="add-btn" onclick="addPoteToCart('${p}')">Adicionar</button>
-                    </div>`;
+                gPotes.innerHTML += `<div class="product-card" data-name="${p.toLowerCase()}" style="${stagger(cardIndex++)}"><div class="product-emoji">🍨</div><div class="product-name">${p}</div><select class="size-select" id="size-pote-${p.replace(/\s+/g, '')}"><option value="1L|19.00">1 Litro — R$ 19,00</option><option value="1.8L|29.00">1.800 ml — R$ 29,00</option></select><button class="add-btn" onclick="addPoteToCart('${p}')">Adicionar</button></div>`;
             });
 
             // Render Copos de Açaí
@@ -348,36 +1009,17 @@
                 { size: "300ml", price: 16.00 },
                 { size: "500ml", price: 19.00 }
             ];
-            
             tamanhosCopos.forEach(c => {
                 let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
                 adicionaisAcai.forEach(add => {
-                    addonsHtml += `
-                        <label>
-                            <input type="checkbox" class="addon-${c.size}" value="${add}" onchange="limitCheckboxes('${c.size}', this)"> ${add}
-                        </label>`;
+                    addonsHtml += `<label><input type="checkbox" class="addon-${c.size}" value="${add}" onchange="limitCheckboxes('${c.size}', this)"> ${add}</label>`;
                 });
                 addonsHtml += `</div>`;
-
-                gCopos.innerHTML += `
-                    <div class="product-card" data-name="copo açaí ${c.size}">
-                        <div class="product-name">🥤 Copo Açaí ${c.size}</div>
-                        ${addonsHtml}
-                        <div class="product-price">R$ ${c.price.toFixed(2)}</div>
-                        <button class="add-btn" onclick="addCopoToCart('${c.size}', ${c.price})">Adicionar</button>
-                    </div>`;
+                gCopos.innerHTML += `<div class="product-card" data-name="copo açaí ${c.size}" style="${stagger(cardIndex++)}"><div class="product-emoji">🥤</div><div class="product-name">Copo Açaí ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addCopoToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
             });
 
             // Render Açaí Tradicional Litro
-            document.getElementById('grid-acai').innerHTML = `
-                <div class="product-card" data-name="açaí tradicional">
-                    <div class="product-name">📦 Açaí Tradicional</div>
-                    <select class="size-select" id="size-acai">
-                        <option value="1L|22.00">1 Litro - R$ 22,00</option>
-                        <option value="1.8L|37.50">1.800 ml - R$ 37,50</option>
-                    </select>
-                    <button class="add-btn" onclick="addAcaiToCart()">Adicionar</button>
-                </div>`;
+            document.getElementById('grid-acai').innerHTML = `<div class="product-card" data-name="açaí tradicional" style="${stagger(cardIndex++)}"><div class="product-emoji">📦</div><div class="product-name">Açaí Tradicional</div><select class="size-select" id="size-acai"><option value="1L|22.00">1 Litro — R$ 22,00</option><option value="1.8L|37.50">1.800 ml — R$ 37,50</option></select><button class="add-btn" onclick="addAcaiToCart()">Adicionar</button></div>`;
 
             // Render Outros
             const outros = [
@@ -390,17 +1032,12 @@
             ];
             const gOutros = document.getElementById('grid-outros');
             outros.forEach(o => {
-                gOutros.innerHTML += `
-                    <div class="product-card" data-name="${o.name.toLowerCase()}">
-                        <div class="product-name">${o.name}</div>
-                        <div class="product-price">R$ ${o.price.toFixed(2)}</div>
-                        <button class="add-btn" onclick="addToCart('${o.name}', ${o.price}, '${o.cat}')">Adicionar</button>
-                    </div>`;
+                gOutros.innerHTML += `<div class="product-card" data-name="${o.name.toLowerCase()}" style="${stagger(cardIndex++)}"><div class="product-emoji">🍫</div><div class="product-name">${o.name}</div><div class="product-price">R$ ${o.price.toFixed(2)}</div><button class="add-btn" onclick="addToCart('${o.name}', ${o.price}, '${o.cat}')">Adicionar</button></div>`;
             });
 
-            if(localStorage.getItem('grazia_client_name')) document.getElementById('client-name').value = localStorage.getItem('grazia_client_name');
-            if(localStorage.getItem('grazia_client_address')) document.getElementById('client-address').value = localStorage.getItem('grazia_client_address');
-            if(localStorage.getItem('grazia_client_ref')) document.getElementById('client-ref').value = localStorage.getItem('grazia_client_ref');
+            if (localStorage.getItem('grazia_client_name')) document.getElementById('client-name').value = localStorage.getItem('grazia_client_name');
+            if (localStorage.getItem('grazia_client_address')) document.getElementById('client-address').value = localStorage.getItem('grazia_client_address');
+            if (localStorage.getItem('grazia_client_ref')) document.getElementById('client-ref').value = localStorage.getItem('grazia_client_ref');
 
             updateCartBar();
         }
@@ -423,7 +1060,7 @@
 
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
-            if(current === 'dark') {
+            if (current === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('grazia_theme', 'light');
             } else {
@@ -435,7 +1072,7 @@
         function addToCart(name, unitPrice, category) {
             const itemKey = `${name}-${category}`;
             const existing = cart.find(i => i.key === itemKey);
-            if(existing) { existing.qty++; } else { cart.push({ key: itemKey, name, unitPrice, basePrice: unitPrice, category, qty: 1 }); }
+            if (existing) { existing.qty++; } else { cart.push({ key: itemKey, name, unitPrice, basePrice: unitPrice, category, qty: 1 }); }
             saveCart();
         }
 
@@ -445,7 +1082,7 @@
             const numPrice = parseFloat(price);
             const itemKey = `${flavor}-${size}-Pote`;
             const existing = cart.find(i => i.key === itemKey);
-            if(existing) { existing.qty++; } else { cart.push({ key: itemKey, name: `${flavor} (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Pote', qty: 1 }); }
+            if (existing) { existing.qty++; } else { cart.push({ key: itemKey, name: `${flavor} (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Pote', qty: 1 }); }
             saveCart();
         }
 
@@ -453,11 +1090,9 @@
             const checkboxes = document.querySelectorAll(`.addon-${size}:checked`);
             let selectedAddons = [];
             checkboxes.forEach(cb => selectedAddons.push(cb.value));
-            
             const addonsText = selectedAddons.length > 0 ? ` + [${selectedAddons.join(', ')}]` : ' (Sem Adicionais)';
             const fullItemName = `Copo Açaí ${size}${addonsText}`;
             const itemKey = `${fullItemName}-${Date.now()}`;
-
             cart.push({ key: itemKey, name: fullItemName, unitPrice: price, basePrice: price, category: 'Copo Açaí', qty: 1 });
             document.querySelectorAll(`.addon-${size}`).forEach(cb => cb.checked = false);
             saveCart();
@@ -469,19 +1104,18 @@
             const numPrice = parseFloat(price);
             const itemKey = `Acai-${size}`;
             const existing = cart.find(i => i.key === itemKey);
-            if(existing) { existing.qty++; } else { cart.push({ key: itemKey, name: `Açaí Tradicional (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Açaí', qty: 1 }); }
+            if (existing) { existing.qty++; } else { cart.push({ key: itemKey, name: `Açaí Tradicional (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Açaí', qty: 1 }); }
             saveCart();
         }
 
         function calculateTotals() {
             let totalQty = 0; let totalPrice = 0; let totalPicoles = 0;
-            cart.forEach(item => { if(item.category === 'Picolé') { totalPicoles += item.qty; } });
+            cart.forEach(item => { if (item.category === 'Picolé') { totalPicoles += item.qty; } });
             let picoleUnitPrice = 2.20;
-            if(totalPicoles >= 100) picoleUnitPrice = 1.60;
-            else if(totalPicoles >= 10) picoleUnitPrice = 1.80;
-
+            if (totalPicoles >= 100) picoleUnitPrice = 1.60;
+            else if (totalPicoles >= 10) picoleUnitPrice = 1.80;
             cart.forEach(item => {
-                if(item.category === 'Picolé') { item.unitPrice = picoleUnitPrice; } else { item.unitPrice = item.basePrice; }
+                if (item.category === 'Picolé') { item.unitPrice = picoleUnitPrice; } else { item.unitPrice = item.basePrice; }
                 totalQty += item.qty; totalPrice += (item.unitPrice * item.qty);
             });
             const deliveryType = document.getElementById('delivery-type') ? document.getElementById('delivery-type').value : 'entrega';
@@ -491,7 +1125,7 @@
 
         function updateCartBar() {
             const { totalQty, totalPrice, deliveryFee } = calculateTotals();
-            document.getElementById('cart-summary').innerText = `${totalQty} itens - R$ ${(totalPrice + deliveryFee).toFixed(2)}`;
+            document.getElementById('cart-summary').innerText = `${totalQty} itens — R$ ${(totalPrice + deliveryFee).toFixed(2)}`;
         }
 
         function openCart() { document.getElementById('cart-modal').style.display = 'flex'; renderCartItems(); }
@@ -499,9 +1133,9 @@
 
         function changeQty(key, delta) {
             const idx = cart.findIndex(i => i.key === key);
-            if(idx !== -1) {
+            if (idx !== -1) {
                 cart[idx].qty += delta;
-                if(cart[idx].qty <= 0) { cart.splice(idx, 1); }
+                if (cart[idx].qty <= 0) { cart.splice(idx, 1); }
                 saveCart(); renderCartItems();
             }
         }
@@ -513,25 +1147,14 @@
 
         function renderCartItems() {
             const container = document.getElementById('cart-items-container'); container.innerHTML = '';
-            if(cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; padding: 20px 0;">Seu carrinho está vazio.</p>';
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding: 30px 0; color: var(--text-muted); font-family: var(--font-display);">Seu carrinho está vazio 🛒</p>';
                 document.getElementById('cart-total-price').innerText = 'Total: R$ 0,00';
                 document.getElementById('cart-delivery-fee').style.display = 'none'; return;
             }
             const { totalPrice, deliveryFee } = calculateTotals();
             cart.forEach(item => {
-                container.innerHTML += `
-                    <div class="cart-item">
-                        <div>
-                            <span style="font-size:0.8rem; display:block; opacity:0.7;">${item.category}</span>
-                            <strong>${item.name}</strong><br><span>R$ ${item.unitPrice.toFixed(2)} cada</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <button class="qty-btn" onclick="changeQty('${item.key}', -1)">-</button>
-                            <span>${item.qty}</span>
-                            <button class="qty-btn" onclick="changeQty('${item.key}', 1)">+</button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div class="cart-item"><div><span>${item.category}</span><br><strong>${item.name}</strong><br><span style="font-size:0.82rem; color: var(--text-muted);">R$ ${item.unitPrice.toFixed(2)} cada</span></div><div class="cart-item-actions"><button class="qty-btn" onclick="changeQty('${item.key}', -1)">−</button><span>${item.qty}</span><button class="qty-btn" onclick="changeQty('${item.key}', 1)">+</button></div></div>`;
             });
             document.getElementById('cart-delivery-fee').style.display = deliveryFee > 0 ? 'block' : 'none';
             document.getElementById('cart-total-price').innerText = `Total: R$ ${(totalPrice + deliveryFee).toFixed(2)}`;
@@ -554,23 +1177,18 @@
 
         function sendOrder(e) {
             e.preventDefault();
-            if(cart.length === 0) return;
-            
-            // Alerta exigido para lembrar do comprovante
+            if (cart.length === 0) return;
             alert("Por favor, enviar o comprovante do Pix para confirmar sua compra, obrigado.");
-
             const name = document.getElementById('client-name').value;
             const delivType = document.getElementById('delivery-type').value;
             const addr = document.getElementById('client-address').value;
             const ref = document.getElementById('client-ref').value;
-
             const { totalPrice, deliveryFee } = calculateTotals();
             let message = `🍇 *NOVO PEDIDO - GRAZIA SORVETES* 🍇\n\n👤 *Cliente:* ${name}\n🛵 *Tipo:* ${delivType === 'entrega' ? 'Entrega' : 'Retirada'}\n`;
-            if(delivType === 'entrega') message += `📍 *End:* ${addr}\n🚚 *Frete:* R$ 6,00\n`;
+            if (delivType === 'entrega') message += `📍 *End:* ${addr}\n🚚 *Frete:* R$ 6,00\n`;
             message += `💳 *Pagamento:* Pix (Realizado)\n\n🛒 *ÍTENS:*\n`;
             cart.forEach(item => { message += `• ${item.qty}x ${item.name} -> R$ ${(item.unitPrice * item.qty).toFixed(2)}\n`; });
             message += `\n💰 *TOTAL:* R$ ${(totalPrice + deliveryFee).toFixed(2)}`;
-
             window.open(`https://wa.me/5512991618035?text=${encodeURIComponent(message)}`, '_blank');
             cart = []; saveCart(); closeCart();
         }
