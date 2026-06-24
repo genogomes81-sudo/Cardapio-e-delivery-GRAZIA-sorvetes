@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grazia Sorvetes - O Sorvete do Gorila</title>
+    <style>
+        :root {
+            --primary: #8B4513;
+            --primary-light: #CD853F;
+            --secondary: #228B22;
+            --bg: #FFF8DC;
+            --surface: #FFFFFF;
+            --text: #4A2E1B;
+            --border: #EEDC82;
+            --shadow: rgba(139, 69, 19, 0.1);
+        }
+        [data-theme="dark"] {
+            --primary: #DEB887;
+            --primary-light: #F4A460;
+            --secondary: #32CD32;
+            --bg: #1A120B;
+            --surface: #2C1E15;
+            --text: #F5DEB3;
+            --border: #3E2A1C;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 60px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 3px 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .search-bar {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .category-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-left: 10px;
+            border-left: 5px solid var(--primary);
+        }
+        .pricing-info {
+            background: var(--surface);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px dashed var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 6px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+        .size-select {
+            width: 100%;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        .add-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        .add-btn:hover {
+            opacity: 0.9;
+        }
+        .cart-preview-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qty-btn {
+            background: var(--border);
+            border: none;
+            color: var(--text);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+        }
+        .checkout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .delivery-alert {
+            background: rgba(139, 69, 19, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Modo</button>
+        <h1>🦍 GRAZIA SORVETES</h1>
+        <p>O Sorvete do Gorila</p>
+        <p>📍 Rua General Júlio Salgado, 399 - Alto do Tabaú (Na Praça)</p>
+        <p>📞 (12) 99161-8035</p>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <input type="text" id="search" class="search-bar" placeholder="Buscar sabor ou produto..." oninput="filterProducts()">
+        </div>
+
+        <div class="category-filters">
+            <button class="category-btn active" onclick="filterCategory('all')">Todos</button>
+            <button class="category-btn" onclick="filterCategory('picole')">🍦 Picolés</button>
+            <button class="category-btn" onclick="filterCategory('paleta')">🦍 Paletas</button>
+            <button class="category-btn" onclick="filterCategory('pote')">🍨 Potes</button>
+            <button class="category-btn" onclick="filterCategory('acai')">🥤 Açaí</button>
+            <button class="category-btn" onclick="filterCategory('outros')">🍫 Especiais</button>
+        </div>
+
+        <!-- PICOLÉS -->
+        <div class="product-section" data-cat="picole">
+            <h2 class="section-title">🍦 PICOLÉS</h2>
+            <div class="pricing-info">
+                <strong>Preço por atacado:</strong><br>
+                • Unidade: R$ 2,20<br>
+                • 10 ou mais: R$ 1,80 cada<br>
+                • 100 ou mais: R$ 1,60 cada
+            </div>
+            <div class="grid" id="grid-picoles"></div>
+        </div>
+
+        <!-- PALETAS -->
+        <div class="product-section" data-cat="paleta">
+            <h2 class="section-title">🦍 PALETAS DO GORILA</h2>
+            <div class="pricing-info">Valor unitário: R$ 6,30 cada</div>
+            <div class="grid" id="grid-paletas"></div>
+        </div>
+
+        <!-- POTES -->
+        <div class="product-section" data-cat="pote">
+            <h2 class="section-title">🍨 SORVETES EM POTE</h2>
+            <div class="grid" id="grid-potes"></div>
+        </div>
+
+        <!-- AÇAÍ -->
+        <div class="product-section" data-cat="acai">
+            <h2 class="section-title">🥤 AÇAÍ</h2>
+            <div class="grid" id="grid-acai"></div>
+        </div>
+
+        <!-- OUTROS -->
+        <div class="product-section" data-cat="outros">
+            <h2 class="section-title">🍫 ESPECIAIS</h2>
+            <div class="grid" id="grid-outros"></div>
+        </div>
+    </div>
+
+    <footer>
+        <strong>🦍 GRAZIA SORVETES - O SORVETE DO GORILA</strong><br>
+        📍 Rua General Júlio Salgado, 399 - Alto do Tabaú (Na Praça)<br>
+        📞 WhatsApp: (12) 99161-8035<br>
+        <small>© 2026 - Todos os direitos reservados</small>
+    </footer>
+
+    <div class="cart-preview-bar" id="cart-bar" onclick="openCart()">
+        <span>🛒 Ver Carrinho</span>
+        <span id="cart-summary">0 itens - R$ 0,00</span>
+    </div>
+
+    <!-- MODAL CARRINHO -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🛒 Seu Pedido</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div id="cart-items-container"></div>
+            
+            <div style="margin-top: 15px; text-align: right; font-size: 0.95rem; display: none;" id="cart-delivery-fee">
+                Taxa de Entrega (Até 2 km): R$ 6,00
+            </div>
+            <div style="margin-top: 10px; font-weight: bold; text-align: right; font-size: 1.1rem;" id="cart-total-price">
+                Total: R$ 0,00
+            </div>
+
+            <h3 style="margin: 20px 0 10px; border-top: 1px solid var(--border); padding-top: 15px;">📋 Dados de Entrega</h3>
+            <form id="checkout-form" onsubmit="sendOrder(event)">
+                <div class="form-group">
+                    <label>Seu Nome *</label>
+                    <input type="text" id="client-name" required placeholder="Ex: João Silva">
+                </div>
+                <div class="form-group">
+                    <label>Forma de Entrega *</label>
+                    <select id="delivery-type" onchange="handleDeliveryChange()" required>
+                        <option value="entrega">Entrega em Domicílio (Raio de 2km)</option>
+                        <option value="retirada">Retirar na Praça (Alto do Tabaú)</option>
+                    </select>
+                </div>
+                <div id="address-fields">
+                    <div class="delivery-alert">
+                        🛵 <strong>Aviso de Frete:</strong> Para entregas domiciliares, será aplicada uma taxa fixa de <strong>R$ 6,00</strong> para distâncias de até 2 km da loja.
+                    </div>
+                    <div class="form-group">
+                        <label>Endereço Completo *</label>
+                        <input type="text" id="client-address" placeholder="Rua, Número, Bairro">
+                    </div>
+                    <div class="form-group">
+                        <label>Ponto de Referência</label>
+                        <input type="text" id="client-ref" placeholder="Ex: Próximo à padaria">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Forma de Pagamento *</label>
+                    <select id="payment-method" required>
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão de Crédito/Débito">Cartão de Crédito/Débito</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                    </select>
+                </div>
+                <button type="submit" class="checkout-btn">🚀 Enviar Pedido via WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const picoles = ["Coco", "Chocolate", "Morango", "Leite Condensado", "Ninho", "Coco Queimado", "Mousse de Maracujá", "Doce de Leite", "Milho Verde", "Blue Ice", "Bombom", "Flocos", "Amendoim", "Limonada Suíça", "Abacaxi", "Limão", "Tangerina", "Uva", "Maracujá", "Groselha", "Maçã Verde", "Pinta Língua", "Manga"];
+        const paletas = ["Açaí / Leite Condensado", "Banana / Avelã", "Brigadeiro", "Café Frappé", "Chiclete", "Chocolate / Morango", "Churros / Canela", "Cocada Branca", "Cocada / Leite Condensado", "Coco / Beijinho", "Cural", "Iogurte / Frutas Vermelhas", "Maracujá / Leite Condensado", "Menta / Chocolate", "Morango / Leite Condensado", "Ninho / Avelã", "Ovomaltine", "Paçoca", "Pé de Moleque", "Prestígio / Beijinho", "Romeu e Julieta", "Pistache"];
+        const potes = ["Abacaxi", "Abacaxi ao Vinho", "Banana Caramelizada", "Banoffe", "Bombom", "Bombom com Café", "Brigadeiro", "Capuccino", "Chandelle", "Chiclete", "Chocolate", "Cocada", "Coco", "Coco Trufado", "Creme", "Doce de Leite", "Flocos", "Iogurte", "Kinder Ovo", "Leite Condensado", "Leite Condensado Trufado", "Maracujá", "Maracujá Trufado", "Milho Verde", "Mega Trufa", "Morango", "Mousse de Limão", "Napolitano", "Negresco", "Ninho Trufado", "Ovomaltine", "Passas ao Rum", "Pavê", "Pistache", "Sensação", "Sonho de Valsa", "Triplo Chocolate"];
+        
+        let cart = JSON.parse(localStorage.getItem('grazia_cart')) || [];
+
+        function saveCart() {
+            localStorage.setItem('grazia_cart', JSON.stringify(cart));
+            updateCartBar();
+        }
+
+        function init() {
+            if(localStorage.getItem('grazia_theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+
+            // Render Picolés
+            const gPicoles = document.getElementById('grid-picoles');
+            picoles.forEach(p => {
+                gPicoles.innerHTML += `
+                    <div class="product-card" data-name="${p.toLowerCase()}">
+                        <div class="product-name">🍦 ${p}</div>
+                        <div class="product-price">R$ 2,20</div>
+                        <button class="add-btn" onclick="addToCart('${p}', 2.20, 'Picolé')">Adicionar</button>
+                    </div>`;
+            });
+
+            // Render Paletas
+            const gPaletas = document.getElementById('grid-paletas');
+            paletas.forEach(p => {
+                gPaletas.innerHTML += `
+                    <div class="product-card" data-name="${p.toLowerCase()}">
+                        <div class="product-name">🦍 ${p}</div>
+                        <div class="product-price">R$ 6,30</div>
+                        <button class="add-btn" onclick="addToCart('${p}', 6.30, 'Paleta')">Adicionar</button>
+                    </div>`;
+            });
+
+            // Render Potes
+            const gPotes = document.getElementById('grid-potes');
+            potes.forEach(p => {
+                gPotes.innerHTML += `
+                    <div class="product-card" data-name="${p.toLowerCase()}">
+                        <div class="product-name">🍨 ${p}</div>
+                        <select class="size-select" id="size-pote-${p.replace(/\s+/g, '')}">
+                            <option value="1L|19.00">1 Litro - R$ 19,00</option>
+                            <option value="1.8L|29.00">1.800 ml - R$ 29,00</option>
+                        </select>
+                        <button class="add-btn" onclick="addPoteToCart('${p}')">Adicionar</button>
+                    </div>`;
+            });
+
+            // Render Açaí
+            document.getElementById('grid-acai').innerHTML = `
+                <div class="product-card" data-name="açaí tradicional">
+                    <div class="product-name">🥤 Açaí Tradicional</div>
+                    <select class="size-select" id="size-acai">
+                        <option value="1L|22.00">1 Litro - R$ 22,00</option>
+                        <option value="1.8L|37.50">1.800 ml - R$ 37,50</option>
+                    </select>
+                    <button class="add-btn" onclick="addAcaiToCart()">Adicionar</button>
+                </div>`;
+
+            // Render Outros
+            const outros = [
+                {name: "Ituzinho Ninho", price: 6.30, cat: "🍫 Ituzinho"},
+                {name: "Ituzinho Napolitano", price: 6.30, cat: "🍫 Ituzinho"},
+                {name: "Skimo Chocolate", price: 6.30, cat: "🍫 Skimo"},
+                {name: "Skimo Coco", price: 6.30, cat: "🍫 Skimo"},
+                {name: "Skimo Leite Condensado", price: 6.30, cat: "🍫 Skimo"},
+                {name: "Skimo Morango", price: 6.30, cat: "🍫 Skimo"}
+            ];
+            const gOutros = document.getElementById('grid-outros');
+            outros.forEach(o => {
+                gOutros.innerHTML += `
+                    <div class="product-card" data-name="${o.name.toLowerCase()}">
+                        <div class="product-name">${o.name}</div>
+                        <div class="product-price">R$ ${o.price.toFixed(2)}</div>
+                        <button class="add-btn" onclick="addToCart('${o.name}', ${o.price}, '${o.cat}')">Adicionar</button>
+                    </div>`;
+            });
+
+            if(localStorage.getItem('grazia_client_name')) document.getElementById('client-name').value = localStorage.getItem('grazia_client_name');
+            if(localStorage.getItem('grazia_client_address')) document.getElementById('client-address').value = localStorage.getItem('grazia_client_address');
+            if(localStorage.getItem('grazia_client_ref')) document.getElementById('client-ref').value = localStorage.getItem('grazia_client_ref');
+
+            updateCartBar();
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            if(current === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('grazia_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('grazia_theme', 'dark');
+            }
+        }
+
+        function addToCart(name, unitPrice, category) {
+            const itemKey = `${name}-${category}`;
+            const existing = cart.find(i => i.key === itemKey);
+            if(existing) {
+                existing.qty++;
+            } else {
+                cart.push({ key: itemKey, name, unitPrice, basePrice: unitPrice, category, qty: 1 });
+            }
+            saveCart();
+        }
+
+        function addPoteToCart(flavor) {
+            const select = document.getElementById(`size-pote-${flavor.replace(/\s+/g, '')}`);
+            const [size, price] = select.value.split('|');
+            const numPrice = parseFloat(price);
+            const itemKey = `${flavor}-${size}-Pote`;
+            const existing = cart.find(i => i.key === itemKey);
+            if(existing) {
+                existing.qty++;
+            } else {
+                cart.push({ key: itemKey, name: `${flavor} (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Pote', qty: 1 });
+            }
+            saveCart();
+        }
+
+        function addAcaiToCart() {
+            const select = document.getElementById('size-acai');
+            const [size, price] = select.value.split('|');
+            const numPrice = parseFloat(price);
+            const itemKey = `Acai-${size}`;
+            const existing = cart.find(i => i.key === itemKey);
+            if(existing) {
+                existing.qty++;
+            } else {
+                cart.push({ key: itemKey, name: `Açaí Tradicional (${size})`, unitPrice: numPrice, basePrice: numPrice, category: 'Açaí', qty: 1 });
+            }
+            saveCart();
+        }
+
+        function calculateTotals() {
+            let totalQty = 0;
+            let totalPrice = 0;
+            let totalPicoles = 0;
+
+            cart.forEach(item => {
+                if(item.category === 'Picolé') {
+                    totalPicoles += item.qty;
+                }
+            });
+
+            let picoleUnitPrice = 2.20;
+            if(totalPicoles >= 100) picoleUnitPrice = 1.60;
+            else if(totalPicoles >= 10) picoleUnitPrice = 1.80;
+
+            cart.forEach(item => {
+                if(item.category === 'Picolé') {
+                    item.unitPrice = picoleUnitPrice;
+                } else {
+                    item.unitPrice = item.basePrice;
+                }
+                totalQty += item.qty;
+                totalPrice += (item.unitPrice * item.qty);
+            });
+
+            const deliveryType = document.getElementById('delivery-type') ? document.getElementById('delivery-type').value : 'entrega';
+            let deliveryFee = 0;
+            if (deliveryType === 'entrega' && cart.length > 0) {
+                deliveryFee = 6.00;
+            }
+
+            return { totalQty, totalPrice, deliveryFee };
+        }
+
+        function updateCartBar() {
+            const { totalQty, totalPrice, deliveryFee } = calculateTotals();
+            const totalWithDelivery = totalPrice + deliveryFee;
+            document.getElementById('cart-summary').innerText = `${totalQty} itens - R$ ${totalWithDelivery.toFixed(2)}`;
+        }
+
+        function openCart() {
+            document.getElementById('cart-modal').style.display = 'flex';
+            renderCartItems();
+        }
+
+        function closeCart() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function changeQty(key, delta) {
+            const idx = cart.findIndex(i => i.key === key);
+            if(idx !== -1) {
+                cart[idx].qty += delta;
+                if(cart[idx].qty <= 0) {
+                    cart.splice(idx, 1);
+                }
+                saveCart();
+                renderCartItems();
+            }
+        }
+
+        function handleDeliveryChange() {
+            const type = document.getElementById('delivery-type').value;
+            document.getElementById('address-fields').style.display = type === 'entrega' ? 'block' : 'none';
+            renderCartItems();
+            updateCartBar();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            if(cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding: 20px 0;">Seu carrinho está vazio.</p>';
+                document.getElementById('cart-total-price').innerText = 'Total: R$ 0,00';
+                document.getElementById('cart-delivery-fee').style.display = 'none';
+                return;
+            }
+
+            const { totalPrice, deliveryFee } = calculateTotals();
+
+            cart.forEach(item => {
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <span style="font-size:0.8rem; display:block; opacity:0.7;">${item.category}</span>
+                            <strong>${item.name}</strong><br>
+                            <span style="font-size:0.9rem;">R$ ${item.unitPrice.toFixed(2)} cada</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="qty-btn" onclick="changeQty('${item.key}', -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty('${item.key}', 1)">+</button>
+                        </div>
+                    </div>`;
+            });
+
+            if (deliveryFee > 0) {
+                document.getElementById('cart-delivery-fee').style.display = 'block';
+            } else {
+                document.getElementById('cart-delivery-fee').style.display = 'none';
+            }
+
+            const totalFinal = totalPrice + deliveryFee;
+            document.getElementById('cart-total-price').innerText = `Total: R$ ${totalFinal.toFixed(2)}`;
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            document.querySelectorAll('.product-section').forEach(sec => {
+                if(cat === 'all' || sec.getAttribute('data-cat') === cat) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                const name = card.getAttribute('data-name');
+                if(name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function sendOrder(e) {
+            e.preventDefault();
+            if(cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+
+            const name = document.getElementById('client-name').value;
+            const delivType = document.getElementById('delivery-type').value;
+            const addr = document.getElementById('client-address').value;
+            const ref = document.getElementById('client-ref').value;
+            const payment = document.getElementById('payment-method').value;
+
+            localStorage.setItem('grazia_client_name', name);
+            localStorage.setItem('grazia_client_address', addr);
+            localStorage.setItem('grazia_client_ref', ref);
+
+            const { totalPrice, deliveryFee } = calculateTotals();
+            const totalFinal = totalPrice + deliveryFee;
+
+            let message = `🦍 *NOVO PEDIDO - GRAZIA SORVETES* 🦍\n\n`;
+            message += `👤 *Cliente:* ${name}\n`;
+            message += `🛵 *Tipo:* ${delivType === 'entrega' ? 'Entrega em Domicílio (Raio até 2km)' : 'Retirada na Praça'}\n`;
+            
+            if(delivType === 'entrega') {
+                message += `📍 *Endereço:* ${addr}\n`;
+                if(ref) message += `🔍 *Ref:* ${ref}\n`;
+                message += `🚚 *Taxa de Frete:* R$ 6,00\n`;
+            }
+            message += `💳 *Pagamento:* ${payment}\n\n`;
+            message += `🛒 *ÍTENS DO PEDIDO:*\n`;
+
+            cart.forEach(item => {
+                message += `• ${item.qty}x ${item.category} ${item.name} (R$ ${item.unitPrice.toFixed(2)} cada) -> R$ ${(item.unitPrice * item.qty).toFixed(2)}\n`;
+            });
+
+            message += `\n💰 *TOTAL DO PEDIDO:* R$ ${totalFinal.toFixed(2)}`;
+
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/5512991618035?text=${encoded}`, '_blank');
+            
+            cart = [];
+            saveCart();
+            closeCart();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
