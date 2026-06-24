@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grazia Sorvete - O Sorvete do Gorila</title>
+    <title>Grazia Sorvetes - O Sorvete do Gorila</title>
     <style>
         :root {
             --primary: #6A1B9A; 
@@ -112,6 +112,7 @@
         .copy-btn { background: var(--secondary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
         .checkout-btn { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .delivery-alert { background: rgba(106, 27, 154, 0.1); border-left: 4px solid var(--primary); padding: 8px 12px; font-size: 0.85rem; margin-bottom: 15px; border-radius: 4px; }
+        .pix-alert { background: #FFF3E0; border-left: 4px solid #FF9800; color: #E65100; padding: 10px 12px; font-size: 0.9rem; margin-top: 15px; border-radius: 4px; font-weight: 600; text-align: center; }
         .addons-list { text-align: left; background: var(--bg); padding: 8px; border-radius: 6px; margin-bottom: 8px; font-size: 0.8rem; }
         .addons-list label { display: block; margin: 4px 0; cursor: pointer; }
         footer { text-align: center; padding: 30px 20px; margin-top: 40px; border-top: 1px solid var(--border); font-size: 0.9rem; opacity: 0.8; line-height: 1.6; }
@@ -264,6 +265,11 @@
                         <option value="Pix">Pix (Chave: 12991618035)</option>
                     </select>
                 </div>
+                
+                <div class="pix-alert">
+                    ⚠️ Por favor, enviar o comprovante do Pix para confirmar sua compra, obrigado.
+                </div>
+
                 <button type="submit" class="checkout-btn">🚀 Confirmar e Enviar no WhatsApp</button>
             </form>
         </div>
@@ -275,7 +281,7 @@
         const potes = ["Abacaxi", "Abacaxi ao Vinho", "Banana Caramelizada", "Banoffe", "Bombom", "Bombom com Café", "Brigadeiro", "Capuccino", "Chandelle", "Chiclete", "Chocolate", "Cocada", "Coco", "Coco Trufado", "Creme", "Doce de Leite", "Flocos", "Iogurte", "Kinder Ovo", "Leite Condensado", "Leite Condensado Trufado", "Maracujá", "Maracujá Trufado", "Milho Verde", "Mega Trufa", "Morango", "Mousse de Limão", "Napolitano", "Negresco", "Ninho Trufado", "Ovomaltine", "Passas ao Rum", "Pavê", "Pistache", "Sensação", "Sonho de Valsa", "Triplo Chocolate"];
         
         const potes300 = ["Coco", "Chocolate", "Napolitano", "Flocos", "Bombom", "Morango", "Milho Verde"];
-        const adicionaisAcai = ["Leite em Pó", "Paçoca", "Choco Power", "Confete", "Granulado"];
+        const adicionaisAcai = ["Leite em Pó", "Leite Condensado", "Paçoca", "Choco Power", "Confete", "Granulado"];
 
         let cart = JSON.parse(localStorage.getItem('grazia_cart')) || [];
 
@@ -549,6 +555,10 @@
         function sendOrder(e) {
             e.preventDefault();
             if(cart.length === 0) return;
+            
+            // Alerta exigido para lembrar do comprovante
+            alert("Por favor, enviar o comprovante do Pix para confirmar sua compra, obrigado.");
+
             const name = document.getElementById('client-name').value;
             const delivType = document.getElementById('delivery-type').value;
             const addr = document.getElementById('client-address').value;
