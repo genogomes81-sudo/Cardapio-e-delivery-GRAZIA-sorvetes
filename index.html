@@ -740,7 +740,7 @@
 
         <!-- COPOS DE AÇAÍ -->
         <div class="product-section" data-cat="copo-acai">
-            <h2 class="section-title">🥤 COPOS DE AÇAÍ (Escolha até 2 adicionais)</h2>
+            <h2 class="section-title">🥤 COPOS DE AÇAÍ</h2>
             <div class="grid" id="grid-copos-acai"></div>
         </div>
 
@@ -900,16 +900,24 @@
                 gPotes.innerHTML += `<div class="product-card" data-name="${p.toLowerCase()}"><div class="product-name">🍨 ${p}</div><select class="size-select" id="size-pote-${p.replace(/\s+/g, '')}"><option value="1L|19.00">1 Litro — R$ 19,00</option><option value="1.8L|29.00">1.800 ml — R$ 29,00</option></select><button class="add-btn" onclick="addPoteToCart('${p}')">Adicionar</button></div>`;
             });
 
+            // COPOS DE AÇAÍ — 300ml: até 2 adicionais | 500ml: até 3 adicionais
             const gCopos = document.getElementById('grid-copos-acai');
-            const tamanhosCopos = [{size:"300ml",price:14.99},{size:"500ml",price:17.99}];
-            tamanhosCopos.forEach(c => {
-                let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
-                adicionaisAcai.forEach(add => {
-                    addonsHtml += `<label><input type="checkbox" class="addon-copo-${c.size}" value="${add}" onchange="limitCheckboxes('copo-${c.size}', this)"> ${add}</label>`;
-                });
-                addonsHtml += `</div>`;
-                gCopos.innerHTML += `<div class="product-card" data-name="copo açaí ${c.size}"><div class="product-name">🥤 Copo Açaí ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addCopoToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
+
+            // Copo 300ml — até 2 adicionais
+            let addons300 = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
+            adicionaisAcai.forEach(add => {
+                addons300 += `<label><input type="checkbox" class="addon-copo-300ml" value="${add}" onchange="limitCheckboxes('copo-300ml', this, 2)"> ${add}</label>`;
             });
+            addons300 += `</div>`;
+            gCopos.innerHTML += `<div class="product-card" data-name="copo açaí 300ml"><div class="product-name">🥤 Copo Açaí 300ml</div>${addons300}<div class="product-price">R$ 14,99</div><button class="add-btn" onclick="addCopoToCart('300ml', 14.99, 2)">Adicionar</button></div>`;
+
+            // Copo 500ml — até 3 adicionais
+            let addons500 = `<div class="addons-list"><strong>Escolha até 3:</strong>`;
+            adicionaisAcai.forEach(add => {
+                addons500 += `<label><input type="checkbox" class="addon-copo-500ml" value="${add}" onchange="limitCheckboxes('copo-500ml', this, 3)"> ${add}</label>`;
+            });
+            addons500 += `</div>`;
+            gCopos.innerHTML += `<div class="product-card" data-name="copo açaí 500ml"><div class="product-name">🥤 Copo Açaí 500ml</div>${addons500}<div class="product-price">R$ 17,99</div><button class="add-btn" onclick="addCopoToCart('500ml', 17.99, 3)">Adicionar</button></div>`;
 
             document.getElementById('grid-acai').innerHTML = `<div class="product-card" data-name="açaí tradicional"><div class="product-name">📦 Açaí Tradicional</div><select class="size-select" id="size-acai"><option value="1L|22.00">1 Litro — R$ 22,00</option><option value="1.8L|37.50">1.800 ml — R$ 37,50</option></select><button class="add-btn" onclick="addAcaiToCart()">Adicionar</button></div>`;
 
@@ -919,7 +927,7 @@
             tamanhosGarrafa.forEach(c => {
                 let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
                 adicionaisGarrafa.forEach(add => {
-                    addonsHtml += `<label><input type="checkbox" class="addon-garrafa-${c.size}" value="${add}" onchange="limitCheckboxes('garrafa-${c.size}', this)"> ${add}</label>`;
+                    addonsHtml += `<label><input type="checkbox" class="addon-garrafa-${c.size}" value="${add}" onchange="limitCheckboxes('garrafa-${c.size}', this, 2)"> ${add}</label>`;
                 });
                 addonsHtml += `</div>`;
                 gGarrafa.innerHTML += `<div class="product-card" data-name="açaí garrafa ${c.size}"><div class="product-name">🫙 Açaí na Garrafa ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addGarrafaToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
@@ -931,7 +939,7 @@
             tamanhosMilkShake.forEach(c => {
                 let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
                 adicionaisGarrafa.forEach(add => {
-                    addonsHtml += `<label><input type="checkbox" class="addon-milkshake-${c.size}" value="${add}" onchange="limitCheckboxes('milkshake-${c.size}', this)"> ${add}</label>`;
+                    addonsHtml += `<label><input type="checkbox" class="addon-milkshake-${c.size}" value="${add}" onchange="limitCheckboxes('milkshake-${c.size}', this, 2)"> ${add}</label>`;
                 });
                 addonsHtml += `</div>`;
                 gMilkShake.innerHTML += `<div class="product-card" data-name="milk shake açaí ${c.size}"><div class="product-name">🥤 Milk Shake Açaí ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addMilkShakeToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
@@ -969,11 +977,11 @@
             updateCartBar();
         }
 
-        function limitCheckboxes(prefix, element) {
+        function limitCheckboxes(prefix, element, max) {
             const checked = document.querySelectorAll(`.addon-${prefix}:checked`);
-            if (checked.length > 2) {
+            if (checked.length > max) {
                 element.checked = false;
-                alert("Você só pode escolher até 2 adicionais incluídos!");
+                alert("Você só pode escolher até " + max + " adicionais incluídos!");
             }
         }
 
@@ -1016,7 +1024,7 @@
             saveCart();
         }
 
-        function addCopoToCart(size, price) {
+        function addCopoToCart(size, price, maxAddons) {
             const checkboxes = document.querySelectorAll(`.addon-copo-${size}:checked`);
             let selectedAddons = [];
             checkboxes.forEach(cb => selectedAddons.push(cb.value));
