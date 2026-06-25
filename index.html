@@ -703,6 +703,8 @@
             <button class="category-btn" onclick="filterCategory('pote')">🍨 Potes Grandes</button>
             <button class="category-btn" onclick="filterCategory('copo-acai')">🥤 Copos de Açaí</button>
             <button class="category-btn" onclick="filterCategory('acai')">📦 Açaí Litro</button>
+            <button class="category-btn" onclick="filterCategory('garrafa-acai')">🫙 Açaí na Garrafa</button>
+            <button class="category-btn" onclick="filterCategory('milkshake')">🥤 Milk Shake Açaí</button>
             <button class="category-btn" onclick="filterCategory('embalagens')">Embalagens & Coberturas</button>
             <button class="category-btn" onclick="filterCategory('outros')">🍫 Especiais</button>
         </div>
@@ -746,6 +748,24 @@
         <div class="product-section" data-cat="acai">
             <h2 class="section-title">📦 AÇAÍ EM LITRO</h2>
             <div class="grid" id="grid-acai"></div>
+        </div>
+
+        <!-- AÇAÍ NA GARRAFA -->
+        <div class="product-section" data-cat="garrafa-acai">
+            <h2 class="section-title">🫙 AÇAÍ NA GARRAFA (Escolha até 2 adicionais)</h2>
+            <div class="pricing-info">
+                Adicionais inclusos: <strong>Leite em Pó, Leite Condensado, Paçoca</strong> (até 2 por garrafa)
+            </div>
+            <div class="grid" id="grid-garrafa-acai"></div>
+        </div>
+
+        <!-- MILK SHAKE DE AÇAÍ -->
+        <div class="product-section" data-cat="milkshake">
+            <h2 class="section-title">🥤 MILK SHAKE DE AÇAÍ (Escolha até 2 adicionais)</h2>
+            <div class="pricing-info">
+                Adicionais inclusos: <strong>Leite em Pó, Leite Condensado, Paçoca</strong> (até 2 por milk shake)
+            </div>
+            <div class="grid" id="grid-milkshake"></div>
         </div>
 
         <!-- EMBALAGENS E COBERTURAS -->
@@ -845,6 +865,7 @@
         const potes = ["Abacaxi","Abacaxi ao Vinho","Banana Caramelizada","Banoffe","Bombom","Bombom com Café","Brigadeiro","Capuccino","Chandelle","Chiclete","Chocolate","Cocada","Coco","Coco Trufado","Creme","Doce de Leite","Flocos","Iogurte","Kinder Ovo","Leite Condensado","Leite Condensado Trufado","Maracujá","Maracujá Trufado","Milho Verde","Mega Trufa","Morango","Mousse de Limão","Napolitano","Negresco","Ninho Trufado","Ovomaltine","Passas ao Rum","Pavê","Pistache","Sensação","Sonho de Valsa","Triplo Chocolate"];
         const potes300 = ["Coco","Chocolate","Napolitano","Flocos","Bombom","Morango","Milho Verde"];
         const adicionaisAcai = ["Leite em Pó","Leite Condensado","Paçoca","Choco Power","Confete","Granulado"];
+        const adicionaisGarrafa = ["Leite em Pó","Leite Condensado","Paçoca"];
 
         let cart = JSON.parse(localStorage.getItem('grazia_cart')) || [];
 
@@ -884,13 +905,37 @@
             tamanhosCopos.forEach(c => {
                 let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
                 adicionaisAcai.forEach(add => {
-                    addonsHtml += `<label><input type="checkbox" class="addon-${c.size}" value="${add}" onchange="limitCheckboxes('${c.size}', this)"> ${add}</label>`;
+                    addonsHtml += `<label><input type="checkbox" class="addon-copo-${c.size}" value="${add}" onchange="limitCheckboxes('copo-${c.size}', this)"> ${add}</label>`;
                 });
                 addonsHtml += `</div>`;
                 gCopos.innerHTML += `<div class="product-card" data-name="copo açaí ${c.size}"><div class="product-name">🥤 Copo Açaí ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addCopoToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
             });
 
             document.getElementById('grid-acai').innerHTML = `<div class="product-card" data-name="açaí tradicional"><div class="product-name">📦 Açaí Tradicional</div><select class="size-select" id="size-acai"><option value="1L|22.00">1 Litro — R$ 22,00</option><option value="1.8L|37.50">1.800 ml — R$ 37,50</option></select><button class="add-btn" onclick="addAcaiToCart()">Adicionar</button></div>`;
+
+            // AÇAÍ NA GARRAFA
+            const gGarrafa = document.getElementById('grid-garrafa-acai');
+            const tamanhosGarrafa = [{size:"300ml",price:13.99},{size:"500ml",price:17.99}];
+            tamanhosGarrafa.forEach(c => {
+                let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
+                adicionaisGarrafa.forEach(add => {
+                    addonsHtml += `<label><input type="checkbox" class="addon-garrafa-${c.size}" value="${add}" onchange="limitCheckboxes('garrafa-${c.size}', this)"> ${add}</label>`;
+                });
+                addonsHtml += `</div>`;
+                gGarrafa.innerHTML += `<div class="product-card" data-name="açaí garrafa ${c.size}"><div class="product-name">🫙 Açaí na Garrafa ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addGarrafaToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
+            });
+
+            // MILK SHAKE DE AÇAÍ
+            const gMilkShake = document.getElementById('grid-milkshake');
+            const tamanhosMilkShake = [{size:"300ml",price:13.99},{size:"500ml",price:17.99}];
+            tamanhosMilkShake.forEach(c => {
+                let addonsHtml = `<div class="addons-list"><strong>Escolha até 2:</strong>`;
+                adicionaisGarrafa.forEach(add => {
+                    addonsHtml += `<label><input type="checkbox" class="addon-milkshake-${c.size}" value="${add}" onchange="limitCheckboxes('milkshake-${c.size}', this)"> ${add}</label>`;
+                });
+                addonsHtml += `</div>`;
+                gMilkShake.innerHTML += `<div class="product-card" data-name="milk shake açaí ${c.size}"><div class="product-name">🥤 Milk Shake Açaí ${c.size}</div>${addonsHtml}<div class="product-price">R$ ${c.price.toFixed(2)}</div><button class="add-btn" onclick="addMilkShakeToCart('${c.size}', ${c.price})">Adicionar</button></div>`;
+            });
 
             const embalagensECoberturas = [
                 {name:"Pacote de Cascão",price:11.00,cat:"Embalagens"},
@@ -924,8 +969,8 @@
             updateCartBar();
         }
 
-        function limitCheckboxes(size, element) {
-            const checked = document.querySelectorAll(`.addon-${size}:checked`);
+        function limitCheckboxes(prefix, element) {
+            const checked = document.querySelectorAll(`.addon-${prefix}:checked`);
             if (checked.length > 2) {
                 element.checked = false;
                 alert("Você só pode escolher até 2 adicionais incluídos!");
@@ -972,14 +1017,14 @@
         }
 
         function addCopoToCart(size, price) {
-            const checkboxes = document.querySelectorAll(`.addon-${size}:checked`);
+            const checkboxes = document.querySelectorAll(`.addon-copo-${size}:checked`);
             let selectedAddons = [];
             checkboxes.forEach(cb => selectedAddons.push(cb.value));
             const addonsText = selectedAddons.length > 0 ? ` + [${selectedAddons.join(', ')}]` : ' (Sem Adicionais)';
             const fullItemName = `Copo Açaí ${size}${addonsText}`;
             const itemKey = `${fullItemName}-${Date.now()}`;
             cart.push({key:itemKey,name:fullItemName,unitPrice:price,basePrice:price,category:'Copo Açaí',qty:1});
-            document.querySelectorAll(`.addon-${size}`).forEach(cb => cb.checked = false);
+            document.querySelectorAll(`.addon-copo-${size}`).forEach(cb => cb.checked = false);
             saveCart();
         }
 
@@ -990,6 +1035,30 @@
             const itemKey = `Acai-${size}`;
             const existing = cart.find(i => i.key === itemKey);
             if(existing) { existing.qty++; } else { cart.push({key:itemKey,name:`Açaí Tradicional (${size})`,unitPrice:numPrice,basePrice:numPrice,category:'Açaí',qty:1}); }
+            saveCart();
+        }
+
+        function addGarrafaToCart(size, price) {
+            const checkboxes = document.querySelectorAll(`.addon-garrafa-${size}:checked`);
+            let selectedAddons = [];
+            checkboxes.forEach(cb => selectedAddons.push(cb.value));
+            const addonsText = selectedAddons.length > 0 ? ` + [${selectedAddons.join(', ')}]` : ' (Sem Adicionais)';
+            const fullItemName = `Açaí na Garrafa ${size}${addonsText}`;
+            const itemKey = `${fullItemName}-${Date.now()}`;
+            cart.push({key:itemKey,name:fullItemName,unitPrice:price,basePrice:price,category:'Açaí na Garrafa',qty:1});
+            document.querySelectorAll(`.addon-garrafa-${size}`).forEach(cb => cb.checked = false);
+            saveCart();
+        }
+
+        function addMilkShakeToCart(size, price) {
+            const checkboxes = document.querySelectorAll(`.addon-milkshake-${size}:checked`);
+            let selectedAddons = [];
+            checkboxes.forEach(cb => selectedAddons.push(cb.value));
+            const addonsText = selectedAddons.length > 0 ? ` + [${selectedAddons.join(', ')}]` : ' (Sem Adicionais)';
+            const fullItemName = `Milk Shake Açaí ${size}${addonsText}`;
+            const itemKey = `${fullItemName}-${Date.now()}`;
+            cart.push({key:itemKey,name:fullItemName,unitPrice:price,basePrice:price,category:'Milk Shake Açaí',qty:1});
+            document.querySelectorAll(`.addon-milkshake-${size}`).forEach(cb => cb.checked = false);
             saveCart();
         }
 
